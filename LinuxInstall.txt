@@ -1,0 +1,38 @@
+[SUR LINUX] 
+pip install pyinstaller
+
+pyinstaller --onefile --windowed --add-data "assets:assets" --icon=assets/ico/Fast_Edit.ico --name imgfastedit main.py
+
+$ ./build_deb.sh
+
+$ sudo dpkg --install imgfastedit.deb
+
+[UNINSTLL]
+$ sudo dpkg --remove imgfastedit.deb
+
+
+---------------------------------------------------------------------------------------------
+[PROBLÈME AVEC LE MODULE PIL (pillow)]
+
+_ Créer un un fichier hooks/hook-pil.py et y ajouter:
+from PyInstaller.utils.hooks import collect_data_files, collect_submodules
+
+# Collecter les données et sous-modules nécessaires
+datas = collect_data_files('PIL')
+hiddenimports = collect_submodules('PIL')
+
+_ Modifier le fichier imgfastedit.spec et ajouter _
+_____ à l'entête:
+from PyInstaller.utils.hooks import collect_all
+
+# Collecte des données et binaires de PIL
+datas, binaries, hiddenimports = collect_all('PIL')
+_____ Ajouter aussi dans a = ()
+hookspath=['hooks'],  # Ajoutez votre répertoire de hooks ici si nécessaire
+
+_ Recompiler avec:
+$ pyinstaller imgfastedit.spec
+
+_ Ou recommencer l'installation
+pyinstaller --onefile --windowed --add-data "assets:assets" --icon=assets/ico/Fast_Edit.ico --additional-hooks-dir hooks --name imgfastedit main.py
+

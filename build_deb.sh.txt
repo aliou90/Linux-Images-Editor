@@ -1,0 +1,71 @@
+myapp/
+├── DEBIAN/
+│   ├── control
+│   ├── postinst
+├── usr/
+│   ├── bin/
+│   │   ├── myapp
+│   └── share/
+│       ├── myapp/
+│           └── ... (autres fichiers nécessaires)
+
+
+Résumé des étapes
+Préparez les fichiers de votre application.
+Créez la structure de dossier pour le paquet Debian.
+Rédigez les fichiers control et postinst dans le dossier DEBIAN/.
+Créer un fichier .desktop pour ajouter l'application au menu des applications.
+Placer le fichier .desktop dans usr/share/applications/.
+Modifier le script postinst pour lancer l'application après l'installation.
+Copiez les fichiers nécessaires dans les dossiers appropriés.
+Générez requirements.txt et placez-le dans usr/share/imgfastedit/.
+Créez le paquet .deb en utilisant dpkg-deb. (dpkg-deb --build imgfastedit)
+Testez l'installation du paquet sur un système Debian-based. (sudo dpkg -i imgfastedit.deb)
+
+#!/bin/bash
+
+# Nom du paquet
+PACKAGE_NAME="imgfastedit"
+VERSION="1.0"
+ARCH="all"
+DESCRIPTION="Traitez vos images facilement et rapidement"
+MAINTAINER="Votre Nom <votre.email@example.com>"
+
+# Créer les répertoires nécessaires
+mkdir -p ${PACKAGE_NAME}_${VERSION}/DEBIAN
+mkdir -p ${PACKAGE_NAME}_${VERSION}/usr/bin
+mkdir -p ${PACKAGE_NAME}_${VERSION}/usr/share/applications
+mkdir -p ${PACKAGE_NAME}_${VERSION}/usr/share/icons/hicolor/48x48/apps
+
+# Copier les fichiers de l'application
+cp path/to/your/executable ${PACKAGE_NAME}_${VERSION}/usr/bin/${PACKAGE_NAME}
+cp path/to/your/icon.png ${PACKAGE_NAME}_${VERSION}/usr/share/icons/hicolor/48x48/apps/${PACKAGE_NAME}.png
+
+# Créer le fichier de contrôle
+cat <<EOF > ${PACKAGE_NAME}_${VERSION}/DEBIAN/control
+Package: ${PACKAGE_NAME}
+Version: ${VERSION}
+Architecture: ${ARCH}
+Maintainer: ${MAINTAINER}
+Description: ${DESCRIPTION}
+EOF
+
+# Créer le fichier .desktop
+cat <<EOF > ${PACKAGE_NAME}_${VERSION}/usr/share/applications/${PACKAGE_NAME}.desktop
+[Desktop Entry]
+Name=ImgFastEdit
+Comment=Traitez vos images facilement et rapidement
+Exec=${PACKAGE_NAME}
+Icon=${PACKAGE_NAME}
+Terminal=false
+Type=Application
+Categories=Graphics;Utility;
+EOF
+
+# Construire le paquet .deb
+dpkg-deb --build ${PACKAGE_NAME}_${VERSION}
+
+# Nettoyer
+rm -rf ${PACKAGE_NAME}_${VERSION}
+
+echo "Paquet .deb créé avec succès : ${PACKAGE_NAME}_${VERSION}.deb"
