@@ -92,5 +92,5 @@ Libre d’utilisation pour projets personnels ou professionnels.
 
 ---
 
-### Auteur 
+### 👨‍💻 Auteur 
 Aliou Mbengue (@aliou90)
