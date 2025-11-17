@@ -92,4 +92,5 @@ Libre d’utilisation pour projets personnels ou professionnels.
 
 ---
 
-# Linux-Images-Editor
+### Auteur 
+Aliou Mbengue (@aliou90)
